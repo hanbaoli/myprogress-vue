@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17-beta.0/vue.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css" rel="stylesheet">
+        <style>
+            #box{
+                width: 600px;
+            }
+            .progress{
+                margin: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="box">
+            <my-progress v-bind:n="30"></my-progress>
+            <my-progress :n="40"></my-progress>
+            <my-progress :n="0"></my-progress>
+            <my-progress :n="70"></my-progress>
+            <my-progress></my-progress>
+        </div>
+        <script>
+            //局部注册的组件
+            var myProgress = {
+                template: `<div>
+                            <div class="progress">
+                                <div class="progress-bar bg-info" role="progressbar" :style="{width: v+'%'}">{{v}}%</div>
+                            </div>
+                          </div>`,
+                props:{
+                    n: {
+                        type: Number,
+                        required: false,
+                        default: 10
+                    }
+                },
+                data(){
+                    return {
+                        v: this.n //父组件传递过来的值不能更改，所以在data中用变量v存储传过来的值n
+                    }
+                },
+                created(){ //在实例对象创建完成后立即被调用
+                    this.timer = setInterval(()=>{
+                        this.v++;
+                        if(this.v===100){
+                            clearInterval(this.timer)
+                        }
+                    },100)
+                },
+                methods: {
+
+                }
+
+            }
+            new Vue({
+                el: "#box",
+                components:{ //局部组件注册
+                    myProgress
+                }
+            })
+        </script>
+    </body>
+</html>
